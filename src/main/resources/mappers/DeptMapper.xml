@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC  
+    "-//mybatis.org//DTD Mapper 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+   
+<mapper namespace="com.fh.shop.admin.mapper.demp.IDeptDao">
+	<insert id="addDept" parameterType="dept">
+		<selectKey keyProperty="id" resultType="int" order="AFTER">
+			select LAST_INSERT_ID()
+		</selectKey>
+		insert into t_dept(deptName,fatherId,description,addtime) values(#{deptName},#{fatherId},#{description},#{addtime})
+	</insert>
+	
+	<select id="findDeptList" resultType="dept">
+		select id,deptName,fatherId,description,addtime from t_dept
+	</select>
+	
+	<update id="update" parameterType="dept">
+		update t_dept set deptName = #{deptName},description = #{description} where id = #{id}
+	</update>
+	
+	<delete id="deleteDept" parameterType="list">
+		delete from t_dept where id in
+		<foreach collection="list" open="(" close=")" separator="," item="id">
+			#{id}
+		</foreach>
+	</delete>
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC  
+    "-//mybatis.org//DTD Mapper 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+   
+<mapper  namespace="com.fh.shop.admin.mapper.member.MemberDao">
+    
+    <sql id="page">
+        limit #{start},#{length}
+    </sql>
+    <select id="memberCount" resultType="int">
+       select count(*) from t_member
+    </select>
+    <select id="findMember" resultType="com.fh.shop.admin.po.Member">
+        select id,userName,password,phone,email,birthday,regTime,lastLoginTime
+          from  t_member
+        order by id desc
+          <include refid="page"></include>
+    </select>
+    <delete id="deleteMember" parameterType="list">
+        delete from t_member where id in
+        <foreach collection="list" open="(" separator="," close=")" item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="toUpdateMember" resultType="com.fh.shop.admin.po.Member">
+        select * from t_member where id = #{id}
+    </select>
+
+    <update id="updateMember" parameterType="com.fh.shop.admin.po.Member">
+        update t_member set userName = #{userName},phone = #{phone}, email = #{email},birthday = #{birthday},regTime = #{regTime},
+            lastLoginTime = #{lastLoginTime}
+            where
+	          id = #{id} ;
+    </update>
+</mapper>

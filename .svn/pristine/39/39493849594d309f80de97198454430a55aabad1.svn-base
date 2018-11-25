@@ -1,0 +1,285 @@
+/** 
+ * <pre>项目名称:shop-admin 
+ * 文件名称:Staff.java 
+ * 包名:com.fh.shop.admin.po 
+ * 创建日期:2018年10月9日下午3:46:47 
+ * Copyright (c) 2018, zwt_951119@163.com All Rights Reserved.</pre> 
+ */  
+package com.fh.shop.admin.po;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+/** 
+ * <pre>项目名称：shop-admin    
+ * 类名称：Staff    
+ * 类描述：    
+ * 创建人：张伟涛 zwt_951119@163.com    
+ * 创建时间：2018年10月9日 下午3:46:47    
+ * 修改人：张伟涛 zwt_951119@163.com     
+ * 修改时间：2018年10月9日 下午3:46:47    
+ * 修改备注：       
+ * @version </pre>    
+ */
+public class Employee extends PageUtil implements Serializable{
+
+	private static final long serialVersionUID = -6609527792373747887L;
+
+	private Integer id;
+	
+	private String staffName;
+	
+	private Integer staffSex;
+	
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	private Date birthday;
+	
+	private Double salary;
+
+	private Integer deptId;
+	//登录成功的次数
+	private Integer loginOkCount;
+	//上次登录成功的时间
+	@DateTimeFormat(pattern="yyyy-MM-dd HH mm:ss")
+	private Date lastLoginTime;
+	private String lastTime;
+	//点击部门查询部门下的员工
+	private List<Integer> idList = new ArrayList<Integer>();
+	
+	//一对多部门
+	private Dept dept = new Dept();
+	
+	//条件查询
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	private Date minDate;
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	private Date maxDate;
+	//薪资查询
+	private Double minSalary;
+	private Double maxSalary;
+	
+	//登陆
+	private String account;
+	
+	private String empPwd;
+	
+	private Integer signCount;	//登陆次数
+	
+	private String imgAuthImag;
+	
+	private Date loginTime;
+	
+	private Integer status;
+
+	private String salf;
+	@JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+	public Date getMinDate() {
+		return minDate;
+	}
+
+	public void setMinDate(Date minDate) {
+		this.minDate = minDate;
+	}
+
+	@JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+	public Date getMaxDate() {
+		return maxDate;
+	}
+
+	public void setMaxDate(Date maxDate) {
+		this.maxDate = maxDate;
+	}
+
+	public Double getMinSalary() {
+		return minSalary;
+	}
+
+	public void setMinSalary(Double minSalary) {
+		this.minSalary = minSalary;
+	}
+
+	public Double getMaxSalary() {
+		return maxSalary;
+	}
+
+	public void setMaxSalary(Double maxSalary) {
+		this.maxSalary = maxSalary;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getStaffName() {
+		return staffName;
+	}
+
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
+	}
+
+	public Integer getStaffSex() {
+		return staffSex;
+	}
+
+	public void setStaffSex(Integer staffSex) {
+		this.staffSex = staffSex;
+	}
+	
+	@JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+	public Date getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
+	}
+
+	public Double getSalary() {
+		return salary;
+	}
+
+	public void setSalary(Double salary) {
+		this.salary = salary;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public String getEmpPwd() {
+		return empPwd;
+	}
+
+	public void setEmpPwd(String empPwd) {
+		this.empPwd = empPwd;
+	}
+
+	public Integer getSignCount() {
+		return signCount;
+	}
+
+	public void setSignCount(Integer signCount) {
+		this.signCount = signCount;
+	}
+
+	public String getImgAuthImag() {
+		return imgAuthImag;
+	}
+
+	public void setImgAuthImag(String imgAuthImag) {
+		this.imgAuthImag = imgAuthImag;
+	}
+
+	public Date getLoginTime() {
+		return loginTime;
+	}
+
+	public void setLoginTime(Date loginTime) {
+		this.loginTime = loginTime;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public Dept getDept() {
+		return dept;
+	}
+
+	public void setDept(Dept dept) {
+		this.dept = dept;
+	}
+
+	public List<Integer> getIdList() {
+		return idList;
+	}
+
+	public void setIdList(List<Integer> idList) {
+		this.idList = idList;
+	}
+
+	public Integer getLoginOkCount() {
+		return loginOkCount;
+	}
+
+	public void setLoginOkCount(Integer loginOkCount) {
+		this.loginOkCount = loginOkCount;
+	}
+
+	public Date getLastLoginTime() {
+		return lastLoginTime;
+	}
+
+	public void setLastLoginTime(Date lastLoginTime) {
+		this.lastLoginTime = lastLoginTime;
+	}
+
+	public String getSalf() {
+		return salf;
+	}
+
+	public void setSalf(String salf) {
+		this.salf = salf;
+	}
+
+	public String getLastTime() {
+		return lastTime;
+	}
+
+	public void setLastTime(String lastTime) {
+		this.lastTime = lastTime;
+	}
+
+	public Integer getDeptId() {
+		return deptId;
+	}
+
+	public void setDeptId(Integer deptId) {
+		this.deptId = deptId;
+	}
+
+	@Override
+	public String toString() {
+		return "Employee{" +
+				"id=" + id +
+				", staffName='" + staffName + '\'' +
+				", staffSex=" + staffSex +
+				", birthday=" + birthday +
+				", salary=" + salary +
+				", loginOkCount=" + loginOkCount +
+				", lastLoginTime=" + lastLoginTime +
+				", idList=" + idList +
+				", dept=" + dept +
+				", minDate=" + minDate +
+				", maxDate=" + maxDate +
+				", minSalary=" + minSalary +
+				", maxSalary=" + maxSalary +
+				", account='" + account + '\'' +
+				", empPwd='" + empPwd + '\'' +
+				", signCount=" + signCount +
+				", imgAuthImag='" + imgAuthImag + '\'' +
+				", loginTime=" + loginTime +
+				", status=" + status +
+				", salf='" + salf + '\'' +
+				'}';
+	}
+}

@@ -1,0 +1,9 @@
+#连接数据库的url路径    
+jdbc.dbcp.fh.url=jdbc:mysql://localhost:3306/test3?useUnicode=true&characterEncoding=UTF-8
+#jdbc.dbcp.fh.url=jdbc:mysql://192.168.0.141:3306/test3?useUnicode=true&characterEncoding=UTF-8
+#驱动名
+jdbc.driverClassName=com.mysql.jdbc.Driver
+jdbc.username=z
+jdbc.password=0
+jdbc.maxActive=200
+jdbc.maxWait=500

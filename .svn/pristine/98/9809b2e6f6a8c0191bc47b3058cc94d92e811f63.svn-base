@@ -1,0 +1,13 @@
+package com.fh.shop.admin.util;
+
+public interface SystemConst {
+
+    int LOG_SUCCESS = 1;
+
+    int LOG_FAIL = 0;
+    //登录状态（锁定）
+    int USER_LOCK = 1;
+    //密码错误的次数
+    int USER_ERROR_COUNT = 3;
+    String PHOTO_PATH = "d:/upload//";
+}

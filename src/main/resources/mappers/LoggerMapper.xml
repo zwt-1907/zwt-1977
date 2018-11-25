@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC  
+    "-//mybatis.org//DTD Mapper 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+   
+<mapper namespace="com.fh.shop.admin.mapper.logger.LoggerDao">
+
+	<sql id="PageLimit">
+		limit #{start}, #{length}
+	</sql>
+
+	 <sql id="search">
+		<where>
+			<if test="userName != null and userName != ''">
+				and userName like #{userName}
+			</if>
+			<if test="status != null">
+				and status = #{status}
+			</if>
+			<if test="minUseTime != null">
+				and useTime &gt;= #{minUseTime}
+			</if>
+			<if test="maxUseTime != null">
+				and useTime &lt;= #{maxUseTime}
+			</if>
+			<if test="minAccessTime != null">
+				and createTime &gt;= #{minAccessTime}
+			</if>
+			<if test="maxAccessTime != null">
+				and createTime &lt;= #{maxAccessTime}
+			</if>
+		</where>
+	</sql>
+	<select id="pageCount" resultType="int">
+		select count(*) from t_logger 
+		<include refid="search"></include>
+	</select>
+
+	<select id="findLogger" resultType="loggerPo">
+		select logId,userName,info,status,userIp,createTime,useTime
+		 from t_logger 
+		 <include refid="search"></include>
+		order by logId desc
+		 <include refid="PageLimit"></include>
+	</select>
+	
+	<!-- 新增 -->
+	<insert id="addLogger" parameterType="loggerPo">
+		insert into t_logger(userName,info,status,userIp,createTime,useTime,msg)
+		 values(#{userName},#{info},#{status},#{userIp},#{createTime},#{useTime},#{msg})
+	</insert>
+	
+	
+	
+</mapper>

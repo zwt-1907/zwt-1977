@@ -1,0 +1,45 @@
+log4j.rootLogger=INFO,Console,D, stdlog, errorlog,stdout
+ 
+log4j.appender.Console=org.apache.log4j.ConsoleAppender
+log4j.appender.Console.Target=System.err
+log4j.appender.Console.layout=org.apache.log4j.PatternLayout
+log4j.appender.Console.layout.ConversionPattern=[%p][%d{yyyy-MM-dd HH\:mm\:ss,SSS}][%c]%m%n
+log4j.appender.Console.Threshold = INFO
+log4j.appender.Console.ImmediateFlush = TRUE
+log4j.appender.Console.Target = System.out
+
+
+### 输出到控制台 ###
+log4j.appender.stdout = org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.Target = System.err
+log4j.appender.stdout.layout = org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern =  %d{ABSOLUTE} %5p %c{ 1 }:%L - %m%n
+
+### 输出到日志文件 ###
+log4j.appender.D = org.apache.log4j.DailyRollingFileAppender
+log4j.appender.D.File = F:/log.log
+log4j.appender.D.Append = true
+log4j.appender.D.Threshold = INFO ## 输出DEBUG级别以上的日志
+log4j.appender.D.layout = org.apache.log4j.PatternLayout
+log4j.appender.D.layout.ConversionPattern = %-d{yyyy-MM-dd HH:mm:ss}  [ %t:%r ] - [ %p ]  %m%n
+
+
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.Threshold=ERROR
+log4j.appender.stdlog.File=d:/error.log
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%d{yyyy/MM/dd HH:mm:ss} [%c{1}] - %m%n
+
+
+log4j.appender.stdlog=org.apache.log4j.RollingFileAppender
+log4j.appender.stdlog.Threshold=DEBUG,console
+log4j.appender.stdlog.File=d:/debug.log
+log4j.appender.stdlog.MaxFileSize=1024KB
+log4j.appender.stdlog.MaxBackupIndex=3
+log4j.appender.stdlog.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdlog.layout.ConversionPattern=%d{yyyy/MM/dd HH:mm:ss} %-5p [%c{1}] - %m%n
+
+
+
+
+

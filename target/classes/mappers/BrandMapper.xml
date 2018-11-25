@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC  
+    "-//mybatis.org//DTD Mapper 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+   
+<mapper namespace="com.fh.shop.admin.mapper.brand.IBrandDao">
+
+
+	<!--来自多表单新增页面的新增-->
+	<insert id="addBrandTo">
+		insert into t_brand (brandName,brandLogo,description)	values
+		<foreach collection="list" separator="," item="brand">
+			(#{brand.brandName},#{brand.brandLogo},#{brand.description})
+		</foreach>
+	</insert>
+
+
+
+	<!--多表单新增-->
+	<insert id="addBrandS" parameterType="brand">
+		insert into t_brand (brandName,brandLogo,description)	values (#{brandName},#{brandLogo},#{description});
+	</insert>
+
+	<sql id="search">
+		<if test="brandName != null and brandName != ''">
+			and brandName like #{brandName}
+		</if>
+	</sql>
+	<select id="findBrandList" resultType="brand">
+		select id,brandName,brandLogo,description from t_brand where 1 =1
+		<include refid="search"></include>
+		order by id desc
+		<include refid="page"></include>
+	</select>
+
+	<select id="countpage" resultType="int">
+		select count(*) from 	t_brand where 1 =1
+		<include refid="search"></include>
+	</select>
+
+	<sql id="page">
+		limit #{start},#{length}
+	</sql>
+	<insert id="addBrand" parameterType="brand">
+		insert into t_brand (brandName,brandLogo,description)	values (#{brandName},#{brandLogo},#{description});
+	</insert>
+
+	<delete id="deleteBrand" parameterType="int">
+		delete  from 	t_brand where id = #{id}
+	</delete>
+
+	<select id="toUpBrand" parameterType="int" resultType="brand">
+		select * from 	t_brand where id = #{id}
+	</select>
+	<update id="updateBrand" parameterType="brand">
+		update t_brand set brandName = #{brandName},description = #{description},brandLogo = #{brandLogo} where id = #{id}
+	</update>
+
+	<select id="findBrandAndGoods" resultType="brand">
+		select * from t_brand
+	</select>
+</mapper>

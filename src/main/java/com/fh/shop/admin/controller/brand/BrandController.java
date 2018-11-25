@@ -1,0 +1,143 @@
+package com.fh.shop.admin.controller.brand;
+
+import com.fh.shop.admin.biz.brand.IBrandService;
+import com.fh.shop.admin.common.ServerResponse;
+import com.fh.shop.admin.common.SystemEnum;
+import com.fh.shop.admin.po.Brand;
+import com.fh.shop.admin.util.FileUtil;
+import com.fh.shop.admin.util.SystemConst;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.UUID;
+
+@Controller
+@RequestMapping("/brand")
+public class BrandController {
+
+    //service
+    @Resource(name = "brandService")
+    private IBrandService brandService;
+
+    @Autowired
+    private HttpServletRequest request;
+
+
+    //跳转
+    @RequestMapping("jumpBrand")
+    public String jump() {
+        return "brand/brand";
+    }
+
+    //跳转到多表单新增的页面
+    @RequestMapping("/jumpAddBrand")
+    public String jumpAddBrand() {
+        return "brand/addBrand";
+    }
+    //多表单页面添加
+    @RequestMapping("addBrandTo")
+    @ResponseBody
+    public ServerResponse addBrandTo(Brand brand){
+        brandService.addBrandTo(brand);
+        return ServerResponse.success();
+    }
+
+
+    //多表单新增时的图片处理
+    @RequestMapping("addFlieinputs")
+    @ResponseBody
+    public ServerResponse addFlieinputs(@RequestParam MultipartFile photo) throws IOException {
+        InputStream inputStream = photo.getInputStream();
+        String originalFilename = photo.getOriginalFilename();
+        String newFilePath = FileUtil.copyFile(inputStream, originalFilename, request.getServletContext().getRealPath(SystemConst.PHOTO_PATH));
+        return ServerResponse.success(SystemConst.PHOTO_PATH+newFilePath);
+    }
+
+    //多表单新增
+    @RequestMapping("addBrandS")
+    @ResponseBody
+    public ServerResponse addBrandS(@RequestBody List<Brand> brand) {
+        System.out.println("------------------" + brand);
+        brandService.addBrandS(brand);
+        return ServerResponse.success();
+    }
+
+
+    //查询
+    @RequestMapping("findBrandList")
+    @ResponseBody
+    public ServerResponse findBrandList(Brand brand, Integer draw) {
+
+        return brandService.findBrandList(brand,draw);
+    }
+
+    //新增
+    @RequestMapping("/addBrand")
+    @ResponseBody
+    public ServerResponse addBrand(Brand brand) {
+        brandService.addBrand(brand);
+        return ServerResponse.success();
+    }
+
+    //删除
+    @RequestMapping("/deleteBrand")
+    @ResponseBody
+    public ServerResponse deleteBrand(Brand brand) {
+        System.err.println(brand.getId());
+        brandService.deleteBrand(brand.getId());
+        return ServerResponse.success();
+    }
+
+    //回显
+    @RequestMapping("/toUpBrand")
+    @ResponseBody
+    public ServerResponse toUpBrand(Brand brand) {
+        Brand updateBrand = brandService.toUpBrand(brand.getId());
+        return ServerResponse.success(updateBrand);
+    }
+
+    //修改
+    @RequestMapping("/updateBrand")
+    @ResponseBody
+    public ServerResponse updateBrand(Brand brand) {
+        brandService.updateBrand(brand);
+        return ServerResponse.success();
+    }
+
+    //上传图片
+    @RequestMapping("flieinput")
+    @ResponseBody
+    public ServerResponse flieinput(@RequestParam("photo") CommonsMultipartFile photo, HttpServletRequest request) {
+        //得到文件原始名
+        String originalFilename = photo.getOriginalFilename();
+        //得到后缀名
+        int lastIndexOf = originalFilename.lastIndexOf(".");
+        //重命名
+        String newphotoName = UUID.randomUUID() + originalFilename.substring(lastIndexOf);
+
+        //转存
+        String path = request.getSession().getServletContext().getRealPath("/") + "//upload";
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        try {
+            photo.transferTo(new File(path + "//" + newphotoName));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ServerResponse.success("upload//" + newphotoName);
+    }
+}

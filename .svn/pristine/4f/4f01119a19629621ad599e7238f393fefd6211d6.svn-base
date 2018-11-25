@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC  
+    "-//mybatis.org//DTD Mapper 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+   
+<mapper namespace="com.fh.shop.admin.mapper.goods.GoodsDao">
+	
+	<sql id="page">
+		limit #{start},#{length}
+	</sql>
+	<sql id="search">
+		<where>
+			<if test="idList != null and idList.size() > 0">
+				category1 in
+				<foreach collection="idList" open="(" separator="," close=")" item="category1">
+					#{category1}
+				</foreach>
+			</if>
+			<if test="goodsName != null and goodsName != ''">
+				and goodsName like #{goodsName}
+			</if>
+			<if test="minPrice != null">
+				and goodsPrice &gt;= #{minPrice}
+			</if>
+			<if test="maxPrice != null">
+				and goodsPrice &lt;= #{maxPrice}
+			</if>
+			<if test="minInventory != null">
+				and inventory &gt;= #{minInventory}
+			</if>
+			<if test="minInventory != null">
+				and inventory &lt;= #{maxInventory}
+			</if>
+			<if test="category1 != null and category1 > 0">
+				and category1 = #{category1}
+			</if>
+			<if test="category2 != null and category2 > 0">
+				and category2 = #{category2}
+			</if>
+			<if test="category3 != null and category3 > 0">
+				and category3 = #{category3}
+			</if>
+		</where>
+	</sql>
+	<select id="pageCount" resultType="int">
+		select  count(*) from t_goods
+		<include refid="search"></include>
+	</select>
+
+	<select id="findGoods" resultType="goods">
+		select tg.id,tg.goodsName,tg.goodsPrice,tg.inventory,tg.goodsPhoto,tg.cateName,
+			tb.brandName "brand.brandName"
+			from t_goods tg
+				left join t_brand tb on tg.brandId = tb.id
+				<include refid="search"></include>
+				order by tg.id desc
+				<include refid="page"></include>
+	</select>
+	
+	<insert id="addGoods" parameterType="goods">
+		insert into t_goods (goodsName,goodsPrice,inventory,goodsPhoto,brandId,category1,category2,category3,cateName)
+		values (#{goodsName},#{goodsPrice},#{inventory},#{goodsPhoto},#{brand.id},#{category1},#{category2},#{category3},#{cateName})
+	</insert>
+
+	<delete id="deleteGoods" parameterType="list">
+		delete from t_goods where id in
+		<foreach collection="list" open="(" separator="," close=")" item="id">
+			#{id}
+		</foreach>
+	</delete>
+
+	<select id="toUpdateGoods" resultType="goods">
+		select tg.id,tg.goodsName,tg.goodsPrice,tg.inventory,tg.goodsPhoto,tg.category1,tg.category2,tg.category3,tg.cateName,
+		tg.cateName,
+		tb.brandName "brand.brandName",
+			tg.brandId
+			from t_goods tg
+				left join t_brand tb on tg.brandId = tb.id
+		 where tg.id = #{id}
+	</select>
+
+	<update id="updateGoods" parameterType="goods">
+		update 	t_goods set
+		goodsName = #{goodsName},goodsPrice = #{goodsPrice},inventory = #{inventory},
+		goodsPhoto = #{goodsPhoto},brandId =#{brand.id},
+		category1=#{category1},category2 = #{category2},category3 = #{category3},cateName = #{cateName}
+			where id = #{id}
+	</update>
+	<delete id="deleteGoodsByTypeId" parameterType="list">
+		delete from t_goods where category1 in
+		<foreach collection="list" open="(" separator="," close=")" item="category1">
+			#{category1}
+		</foreach>
+		and category2 in
+		<foreach collection="list" open="(" separator="," close=")" item="category2">
+			#{category2}
+		</foreach>
+		and category3 in
+		<foreach collection="list" open="(" separator="," close=")" item="category3">
+			#{category3}
+		</foreach>
+	</delete>
+</mapper>

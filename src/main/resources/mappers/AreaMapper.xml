@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC  
+    "-//mybatis.org//DTD Mapper 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+   
+<mapper namespace="com.fh.shop.admin.mapper.area.AreaDao">
+
+	<!-- 新增 -->
+	<insert id="addArea" parameterType="area">
+		<selectKey keyProperty="areaId" resultType="int" order="AFTER"> 
+			select LAST_INSERT_ID()
+		</selectKey>
+		insert into t_area(areaName,areaFatherId) values(#{areaName},#{areaFatherId})
+	</insert>
+	
+	<!-- 查询 -->
+	<select id="findArea" resultType="area">
+		select areaId,areaName,areaFatherId from t_area
+	</select>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="area">
+		update t_area set areaName = #{areaName} where areaId = #{areaId}
+	</update>
+	
+	<delete id="deleteArea" parameterType="area">
+		delete from t_area where areaId in
+		<foreach collection="list" open="(" close=")" separator="," item="areaId">
+			#{areaId}
+		</foreach>
+	</delete>
+</mapper>

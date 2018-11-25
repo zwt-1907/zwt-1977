@@ -1,0 +1,89 @@
+package com.fh.shop.admin.controller.type;
+
+import com.fh.shop.admin.annotation.LogAnnotation;
+import com.fh.shop.admin.biz.goodsClass.GoClassService;
+import com.fh.shop.admin.common.ServerResponse;
+import com.fh.shop.admin.po.Type;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Controller
+public class TypeController {
+    @Resource
+    private GoClassService goClassService;
+
+    //跳转页面
+    @RequestMapping("/goClass/jump")
+    @LogAnnotation("进入分类页面")
+    public String jump(){
+        return "/goodsClass/list";
+    }
+
+    //商品新增页面查询
+    @RequestMapping("/type/findByAddGoods")
+    @ResponseBody
+    @LogAnnotation("添加商品时查询分类列表")
+    public ServerResponse findByAddGoods(Integer id){
+        return goClassService.findByAddGoods(id);
+    }
+
+    //查询页面
+    @RequestMapping("/goClass/FindGoList")
+    @ResponseBody
+    @LogAnnotation("查询分类列表")
+    public ServerResponse FindGoList(Type type){
+        List<Type> goList = goClassService.FindGoList(type);
+        List<Map> map = new ArrayList();
+        for (Type type1 : goList) {
+            Map dataMap = new HashMap();
+            dataMap.put("id", type1.getgId());
+            dataMap.put("pId", type1.getgPId());
+            dataMap.put("name", type1.getgName());
+            map.add(dataMap);
+        }
+        return ServerResponse.success(map);
+    }
+
+    //菜单树新增
+    @RequestMapping("/goClass/addGoClass")
+    @ResponseBody
+    @LogAnnotation("增加分类菜单")
+    public ServerResponse addGoClass(Type type){
+
+        goClassService.addGoClass(type);
+
+        return ServerResponse.success(type);
+    }
+
+    //菜单树新增
+    @RequestMapping("/goClass/updateGoClass")
+    @ResponseBody
+    @LogAnnotation("修改分类菜单")
+    public ServerResponse updateGoClass(Type type){
+
+        goClassService.updateGoClass(type);
+
+        return ServerResponse.success();
+    }
+
+    //菜单树删除
+    @RequestMapping("/goClass/deleteGoClass")
+    @ResponseBody
+    @LogAnnotation("删除分类菜单")
+    public ServerResponse deleteGoClass(@RequestParam("idList[]") List<Integer> idList){
+
+        goClassService.deleteGoClass(idList);
+
+        return ServerResponse.success();
+    }
+
+
+}

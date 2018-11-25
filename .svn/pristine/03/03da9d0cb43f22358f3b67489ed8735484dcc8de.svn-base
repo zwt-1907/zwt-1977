@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC  
+    "-//mybatis.org//DTD Mapper 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fh.shop.admin.mapper.employee.EmployeeDao">
+
+
+	<!--修改登录状态-->
+	<update id="updateEmpStatus" parameterType="employee">
+		update t_employee set status = #{status} where id = #{id}
+	</update>
+
+	 <select id="texportExeclByDept" resultType="employee">
+       select tm.id,tm.staffName,tm.staffSex,tm.birthday,tm.salary,td.deptName
+		
+		"dept.deptName" from t_employee tm
+		
+		left join t_dept td on tm.deptId = td.id
+		
+        where td.deptId IN
+        <foreach collection="list" separator="," item="id" close=")" open="(" >
+            #{id}
+        </foreach>
+    </select>
+	
+	
+	
+	<!-- 动态导出Excel -->
+	<select id="dynaMicdownLoadExcel" parameterType="employee" resultType="employee">
+		select tm.id,tm.staffName,tm.staffSex,tm.birthday,tm.salary,td.deptName
+		
+		"dept.deptName" from t_employee tm
+		
+		left join t_dept td on tm.deptId = td.id
+		
+		<include refid="empWhere"></include>
+	</select>
+
+	<sql id="empWhere">
+		<where>
+			<if test="idList != null and idList.size()>0">
+				tm.deptId in
+				<foreach collection="idList" open="("   separator=","  close=")" item="id">
+					#{id}
+				</foreach>
+			</if>
+			<if test="staffName != null and staffName!=''">
+				and tm.staffName like #{staffName}
+			</if>
+			<if test="staffSex !=null">
+				and tm.staffSex = #{staffSex}
+			</if>
+
+			<if test="minDate != null">
+				and tm.birthday &gt;= #{minDate}
+			</if>
+			<if test="maxDate != null">
+				and tm.birthday &lt;= #{maxDate}
+			</if>
+
+			<if test="minSalary != null">
+				and tm.salary &gt;= #{minSalary}
+			</if>
+			<if test="maxSalary != null ">
+				and tm.salary &lt;= #{maxSalary}
+			</if>
+		</where>
+	</sql>
+
+	<sql id="page">
+		limit #{start},#{length}
+	</sql>
+
+
+	<select id="findEmployee" resultType="employee" parameterType="employee">
+		select
+		tm.id,tm.staffName,tm.staffSex,tm.birthday,tm.salary,tm.status,td.deptName
+
+		"dept.deptName" from t_employee tm
+
+		left join t_dept td on tm.deptId = td.id
+
+		<include refid="empWhere"></include>
+		order by tm.id desc
+		<include refid="page"></include>
+
+	</select>
+
+
+	<select id="countPage" resultType="long" parameterType="employee">
+		select count(*) from t_employee tm
+		left join t_dept td on tm.deptId = td.id
+		<include refid="empWhere"></include>
+	</select>
+
+
+	<insert id="addEmployee" parameterType="employee">
+		insert into t_employee
+		(staffName,staffSex,birthday,salary,account,empPwd,deptId,salf)
+		values(#{staffName},#{staffSex},#{birthday},#{salary},#{account},#{empPwd},#{dept.id},#{salf})
+	</insert>
+
+	<delete id="deleteEmp" parameterType="list">
+		delete from t_employee where id in
+		<foreach collection="list" open="(" close=")" separator=","
+			item="id">
+			#{id}
+		</foreach>
+	</delete>
+
+	<update id="updateByIdEmp" parameterType="employee">
+		update t_employee set
+		staffName =
+		#{staffName},staffSex=#{staffSex},birthday=#{birthday},salary=#{salary}
+		where id = #{id}
+	</update>
+
+	<!-- 登陆 -->
+	<select id="dlUser" resultType="employee">
+		select tm.id,tm.staffName,tm.staffSex,tm.birthday,tm.salary,
+
+		tm.loginOkCount,tm.account,tm.empPwd,tm.signCount,tm.loginTime,tm.lastLoginTime,tm.status,tm.salf,
+
+		td.deptName "dept.deptName"
+
+		from t_employee tm
+
+		left join t_dept td on tm.deptId = td.id
+
+		 where account = #{account}
+	</select>
+	<!-- 修改用户登陆状态 -->
+	<update id="updateStatus" parameterType="int">
+		update t_employee set status = #{status} where id = #{id}
+	</update>
+	<!-- 登陆错误次数和登陆时间 -->
+	<update id="updateSignCountAndLoginTime">
+		update t_employee set signCount = signCount+1,loginTime
+		= #{newDate} where id = #{id}
+	</update>
+	<!--登录成功把错误次数清空-->
+	<select id="updateSignCount" parameterType="int">
+		update t_employee set signCount = 0 where id = #{id}
+	</select>
+
+
+	<!--增加登录的时间-->
+	<update id="updateOkTime">
+		update t_employee set lastLoginTime = #{date}
+		where id = #{id}
+	</update>
+	<!--每天清空昨天的登录次数-->
+	<update id="updateOkCount" parameterType="int">
+		update t_employee set loginOkCount = 1
+		where id = #{id}
+	</update>
+	<!--增加成功登录的次数-->
+	<update id="addOkCount" parameterType="int">
+		update t_employee set loginOkCount = loginOkCount+1
+		where id = #{id}
+	</update>
+
+
+	<select id="downLoadExcel" parameterType="employee" resultType="employee" >
+		select 
+		tm.id,tm.staffName,tm.staffSex,tm.birthday,tm.salary,td.deptName
+		
+		"dept.deptName" from t_employee tm
+		
+		left join t_dept td on tm.deptId = td.id
+	
+	</select>
+	
+	<!-- 批量删除员工 -->
+	<delete id="deleteBachByDeptId" parameterType="list">
+		delete from t_employee where deptId in 
+			<foreach collection="list" open="("   separator=","  close=")" item="id">
+				#{id}
+			</foreach>
+	</delete>
+</mapper>
